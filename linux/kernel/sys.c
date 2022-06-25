@@ -226,7 +226,7 @@ int sys_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count)
     ret = 0;
     while (count >= 16) {
         oldfs = get_fs();
-        set_fs(0x10);
+        set_fs(get_ds());
         nsize = sys_read(fd, buf, 16);
         set_fs(oldfs);
 
@@ -235,8 +235,7 @@ int sys_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count)
         count -= nsize;
         ret += nsize;
         buf[nsize] = '\0';
-        ino = *(unsigned char *)(buf + 1);
-        ino = (ino << 8) + *(unsigned char *)buf;
+        ino = *(unsigned short *)buf;
         off = ret;
         reclen = sizeof(struct linux_dirent);
 
@@ -255,8 +254,6 @@ int sys_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count)
 
 int sys_sleep(int t) { return -ENOSYS; }
 
-int sys_execve2(const char *filename, char *const argv[], char *const envp[]) { return -ENOSYS; }
-
 char *sys_getcwd(char *buf, size_t size) {
     //  printk("sys_getcwd\n");
 
@@ -270,7 +267,7 @@ char *sys_getcwd(char *buf, size_t size) {
     unsigned long fpos;
 
     oldfs = get_fs();
-    set_fs(0x10);
+    set_fs(get_ds());
     top = 0;
     inum[top] = current->pwd->i_num;
     izone[top] = current->pwd->i_zone[0];
@@ -297,7 +294,7 @@ char *sys_getcwd(char *buf, size_t size) {
             fpos = izone[top] * 1024 + 32;
             while (1) {
                 oldfs = get_fs();
-                set_fs(0x10);
+                set_fs(get_ds());
                 if (!block_read(idev, &fpos, fbuf, 16)) { // end of block
                     set_fs(oldfs);
                     break;
