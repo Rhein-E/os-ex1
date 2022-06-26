@@ -12,6 +12,8 @@
 
 char *getcwd(char *buf, size_t size) {
     long __res;
+    if (!buf)
+        buf = (char *)malloc(32);
     __asm__ volatile("int $0x80" : "=a"(__res) : "0"(__NR_getcwd), "b"((long)(buf)), "c"((long)(size)));
     if (__res > 0)
         return (char *)__res;
