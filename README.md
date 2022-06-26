@@ -1,14 +1,5 @@
 # Report
 
-## 综述
-
-在内核代码的 ```kernel/sys.c``` 中增加系统调用的实现，
-在 ```kernel/system_call.s``` 中更改 ```nr_system_calls``` 为 ```92```，
-在 ```include/unistd.h``` 中添加系统调用号，
-在 ```include/linux/sys.h``` 中把系统调用加入 ```sys_call_table```。
-
-重新编译内核并启动系统，编译并执行测试程序。
-
 ## sys_getdents 实现
 
 ### 总体思路
