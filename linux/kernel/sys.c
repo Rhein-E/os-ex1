@@ -252,7 +252,15 @@ int sys_getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count)
     return ret;
 }
 
-int sys_sleep(int t) { return -ENOSYS; }
+
+int sys_sleep(unsigned int seconds)
+{
+	sys_signal(SIGALRM, SIG_IGN);
+	sys_alarm(seconds);
+	if (sys_pause() != -1)
+		return 0;
+	return -1;
+}
 
 char *sys_getcwd(char *buf, size_t size) {
     //  printk("sys_getcwd\n");
