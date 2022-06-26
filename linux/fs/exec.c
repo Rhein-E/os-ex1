@@ -507,14 +507,11 @@ restart_interp:
     eip[3] = p;          /* esp */
 
     // 为 .text, .data, .bss 段分配物理页
-    // unsigned int tmp = current->brk - 1;
-    // while (tmp >= current->start_code) {
-    //     unsigned long *page_table;
-    //     page_table = (unsigned long *)((address >> 20) & 0xffc); // 获取页目录项
-    //     if (!((*page_table) & 1))
-    //         do_no_page(0, tmp); // 该页无效，需要分配
-    //     tmp -= PAGE_SIZE;
-    // }
+    unsigned long i_addr = current->start_code + current->brk;
+    while (i_addr >= current->start_code) {
+        do_no_page(0, i_addr);
+        i_addr -= PAGE_SIZE;
+    }
 
     return 0;
 exec_error2:

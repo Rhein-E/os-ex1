@@ -21,7 +21,7 @@
 
 所以要把文件内容读入内核缓冲区，需要先调用 ```set_fs``` 临时修改段寄存器 ```fs``` 为内核数据段，完成文件读取操作后再次调用 ```set_fs``` 将其恢复。
 
-同理，因为 ```sys_getdents``` 的参数也是用户地址，在将数据写入其中时也需要使用 ```put_fs_byte``` 等函数完成。
+同理，因为 ```sys_getdents``` 的参数 ```buf``` 也是用户地址，在将数据写入其中时也需要使用 ```put_fs_byte``` 等函数完成。
 
 ### 数据处理
 
@@ -40,5 +40,13 @@
 不断向父目录追溯，直到 ```..``` 目录指向子目录本身，即到达根目录。
 
 参考资料：
+
 - [linux0.11源码分析-目录查找](https://juejin.cn/post/69148310594777579661)
 - [block_read和block_write函数 设备块号](https://blog.csdn.net/yu704645129/article/details/50462808)
+
+## sys_execve2 实现
+
+参考资料：
+
+- [Linux0.11系统调用之execve流程解析](https://blog.csdn.net/m0_37981610/article/details/117281419)
+- [linux0.11内核源码剖析:第一篇 内存管理、memory.c](https://www.cnblogs.com/v-July-v/archive/2011/01/06/1983695.html)
